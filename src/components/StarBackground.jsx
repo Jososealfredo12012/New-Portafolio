@@ -4,10 +4,18 @@ function StarBackground() {
   const [stars, setStars] = useState([]);
   const [meteors, setMeteors] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     generateStars();
-    generateMeteors()
-  }, [])
+    generateMeteors();
+
+    const handleResize = () => {
+      generateStars();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const generateStars = () => {
     const numberOfStars = Math.floor(
@@ -27,11 +35,11 @@ function StarBackground() {
       });
     }
 
-    setStars(newStars)
+    setStars(newStars);
   };
 
   const generateMeteors = () => {
-    const numberOfmeteors = 4
+    const numberOfmeteors = 4;
 
     const newMeteors = [];
 
@@ -46,32 +54,42 @@ function StarBackground() {
       });
     }
 
-    setMeteors(newMeteors)
+    setMeteors(newMeteors);
   };
 
-  return <div className='fixed inset-0 overflow-hidden pointer-events-none z-0'>
-    {stars.map((star)=>(
-        <div key={star.id} className='star animate-pulse-subtle' style={{
+  return (
+    <div className='fixed inset-0 overflow-hidden pointer-events-none z-0'>
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className='star animate-pulse-subtle'
+          style={{
             width: `${star.size}px`,
             height: `${star.size}px`,
             left: `${star.x}%`,
             top: `${star.y}%`,
             opacity: `${star.opacity}`,
             animationDuration: `${star.animationDuration}s`,
-        }}/>
-    ))}
+          }}
+        />
+      ))}
 
-    {meteors.map((meteors)=>(
-        <div key={meteors.id} className='meteor animate-meteor' style={{
+      {meteors.map((meteors) => (
+        <div
+          key={meteors.id}
+          className='meteor animate-meteor'
+          style={{
             width: `${meteors.size * 50}px`,
             height: `${meteors.size}px`,
             left: `${meteors.x}%`,
             top: `${meteors.y}%`,
             animationDelay: `${meteors.delay}`,
             animationDuration: `${meteors.animationDuration}s`,
-        }}/>
-    ))}
-  </div>;
+          }}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default StarBackground;
